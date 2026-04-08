@@ -1,5 +1,5 @@
 import { supabaseServer } from '../config/supabase';
-import { resend, sendRoadmapGenerated, sendRoadmapNotificationToTeam } from '../config/resend';
+import { resend, sendRoadmapGenerated } from '../config/resend';
 import dns from 'dns';
 
 dns.setDefaultResultOrder('ipv4first');
@@ -542,44 +542,29 @@ Genera el roadmap COMPLETO y PERSONALIZADO ahora:
       if (sessionError || !sessionData) {
         console.error('⚠️ No se encontraron datos de la sesión:', sessionError);
         return roadmapData;
-      }
-
-      const clientEmail = sessionData.email;
+      }      const clientEmail = sessionData.email;
       const clientName = sessionData.client_name;
       const companyName = sessionData.company;
       const mainChallengeName = sessionData.main_challenge;
       const contextDescription = sessionData.context;
 
-      // 📨 EMAIL 1: AL CLIENTE - Roadmap generado
-      console.log(`📨 Enviando roadmap generado a cliente: ${clientEmail}`);
+      // 📨 ÚNICO EMAIL: AL EQUIPO (NOTIFICATION_EMAIL) - Roadmap completo con datos del cliente
+      const notificationEmail = process.env.NOTIFICATION_EMAIL || 'ariesbook844@gmail.com';
+      console.log(`📨 Enviando roadmap a equipo: ${notificationEmail}`);
       
       try {
         await sendRoadmapGenerated(
-          clientEmail,
+          notificationEmail, // ← Enviar SOLO al equipo
           clientName,
           roadmapData,
-          companyName
-        );
-        console.log('✅ Email al cliente enviado exitosamente');
-      } catch (emailError) {
-        console.error('⚠️ Error enviando email al cliente:', emailError);
-      }
-
-      // 📨 EMAIL 2: AL EQUIPO (NOTIFICATION_EMAIL) - Notificación de roadmap generado
-      console.log(`📨 Enviando notificación de roadmap al equipo: ${process.env.NOTIFICATION_EMAIL}`);
-      
-      try {
-        await sendRoadmapNotificationToTeam(
-          clientName,
-          clientEmail,
           companyName,
           mainChallengeName,
           contextDescription,
-          roadmapData
+          clientEmail // ← Incluir email del cliente en el contenido
         );
-        console.log('✅ Notificación al equipo enviada exitosamente');
+        console.log('✅ Email con roadmap enviado al equipo exitosamente');
       } catch (emailError) {
-        console.error('⚠️ Error enviando notificación al equipo:', emailError);
+        console.error('⚠️ Error enviando email:', emailError);
       }
 
     } catch (error) {

@@ -40,8 +40,7 @@ export async function sendRoadmapGenerated(
   roadmapData: any,
   company: string,
   mainChallenge?: string,
-  context?: string,
-  clientEmail?: string
+  context?: string
 ): Promise<void> {
   try {
     const stagesHtml = roadmapData.stages
@@ -77,15 +76,18 @@ export async function sendRoadmapGenerated(
             <p style="margin: 10px 0 0 0; color: #666; font-size: 16px;">${company}</p>
           </div>
 
-          <div style="padding: 30px;">            <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #d97706;">
+          <div style="padding: 30px;">
+            {/* DATOS DEL CLIENTE */}
+            <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #d97706;">
               <h3 style="margin: 0 0 15px 0; color: #92400e;">👤 Información de tu Solicitud</h3>
-              <p style="margin: 8px 0; font-size: 14px;"><strong>Nombre del Cliente:</strong> ${clientName}</p>
-              <p style="margin: 8px 0; font-size: 14px;"><strong>Email del Cliente:</strong> ${clientEmail || email}</p>
+              <p style="margin: 8px 0; font-size: 14px;"><strong>Nombre:</strong> ${clientName}</p>
+              <p style="margin: 8px 0; font-size: 14px;"><strong>Email:</strong> ${email}</p>
               <p style="margin: 8px 0; font-size: 14px;"><strong>Empresa:</strong> ${company}</p>
               ${mainChallenge ? `<p style="margin: 8px 0; font-size: 14px;"><strong>Desafío Principal:</strong> ${mainChallenge}</p>` : ''}
               ${context ? `<p style="margin: 8px 0; font-size: 14px;"><strong>Contexto Operativo:</strong> ${context.substring(0, 150)}...</p>` : ''}
             </div>
 
+            {/* CONTEXTO DE NEGOCIO */}
             <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #d97706;">
               <h3 style="margin: 0 0 15px 0; color: #92400e;">📊 Contexto de tu Negocio</h3>
               <p style="margin: 8px 0; font-size: 14px;"><strong>Desafío Principal:</strong> ${roadmapData.businessContext?.mainChallenge || 'No especificado'}</p>
@@ -94,6 +96,7 @@ export async function sendRoadmapGenerated(
               <p style="margin: 8px 0; font-size: 14px;"><strong>Objetivo:</strong> ${roadmapData.businessContext?.objective || 'No especificado'}</p>
             </div>
 
+            {/* RESUMEN DE IMPACTO */}
             <div style="background-color: #dcfce7; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #16a34a;">
               <h3 style="margin: 0 0 15px 0; color: #166534;">✨ Resumen de Impacto</h3>
               <p style="margin: 8px 0; font-size: 14px;"><strong>Punto de Partida:</strong> ${roadmapData.summary?.startingPoint || 'No especificado'}</p>
@@ -101,13 +104,18 @@ export async function sendRoadmapGenerated(
               <p style="margin: 8px 0; font-size: 14px;"><strong>Métrica de Éxito:</strong> ${roadmapData.summary?.successMetric || 'No especificado'}</p>
             </div>
 
-            <div style="background-color: #f0f9ff; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #0284c7;">              <p style="margin: 8px 0; font-size: 14px;"><strong>ROI Estimado:</strong> <span style="color: #0284c7; font-weight: bold;">${roadmapData.roi_estimate}%</span></p>
+            {/* INDICADORES CLAVE */}
+            <div style="background-color: #f0f9ff; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #0284c7;">
+              <h3 style="margin: 0 0 15px 0; color: #0c4a6e;">📈 Indicadores Clave</h3>
+              <p style="margin: 8px 0; font-size: 14px;"><strong>ROI Estimado:</strong> <span style="color: #0284c7; font-weight: bold;">${roadmapData.roi_estimate}%</span></p>
               <p style="margin: 8px 0; font-size: 14px;"><strong>Timeline:</strong> <span style="color: #0284c7; font-weight: bold;">${roadmapData.timeline_months} meses</span></p>
             </div>
 
+            {/* ROADMAP ETAPAS */}
             <h3 style="color: #006196; margin: 30px 0 20px 0;">🎯 Tu Ruta de Transformación</h3>
             ${stagesHtml}
 
+            {/* MÉTRICAS */}
             <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
               <h3 style="margin: 0 0 15px 0; color: #1f2937;">📊 Métricas de Éxito</h3>
               <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #555;">
@@ -115,11 +123,13 @@ export async function sendRoadmapGenerated(
               </ul>
             </div>
 
+            {/* RECOMENDACIONES */}
             <div style="background-color: #fce7f3; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #db2777;">
               <h3 style="margin: 0 0 15px 0; color: #831843;">💡 Recomendaciones Estratégicas</h3>
               <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #555;">${roadmapData.recommendations || 'No especificadas'}</p>
             </div>
 
+            {/* PRÓXIMOS PASOS */}
             <div style="background-color: #f0fdf4; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #16a34a;">
               <h3 style="margin: 0 0 15px 0; color: #166534;">📲 Próximos Pasos</h3>
               <ol style="margin: 0; padding-left: 20px; font-size: 14px;">
@@ -129,6 +139,7 @@ export async function sendRoadmapGenerated(
               </ol>
             </div>
 
+            {/* FOOTER */}
             <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
               <p style="margin: 0; font-size: 14px; color: #666;">¿Tienes preguntas? Contáctanos en <a href="mailto:support@adoptai.com" style="color: #006196; text-decoration: none;">support@adoptai.com</a></p>
               <p style="margin: 10px 0 0 0; font-size: 12px; color: #999;">© 2026 AdoptAI - Transformación Digital con Inteligencia Artificial</p>

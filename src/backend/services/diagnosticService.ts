@@ -1,6 +1,6 @@
 import { DiagnosticSession } from '../../types';
 import { supabaseServer } from '../config/supabase';
-import { sendDiagnosticConfirmation, sendLeadNotification } from '../config/resend';
+// Las funciones de email ya no se importan aquí - se envían cuando se genera el roadmap
 
 export async function scheduleDiagnosticSession(
   clientName: string,
@@ -78,8 +78,7 @@ export async function scheduleDiagnosticSession(
       if (error) {
         throw new Error(`Supabase error: ${error.message}`);
       }
-      
-      console.log('✅ Diagnóstico guardado/actualizado en Supabase:', data.id);
+        console.log('✅ Diagnóstico guardado/actualizado en Supabase:', data.id);
 
       // 2. Guardar en leads_analytics para análisis
       try {
@@ -91,7 +90,7 @@ export async function scheduleDiagnosticSession(
             challenge: mainChallenge,
             diagnostic_completed: true,
             roadmap_generated: false,
-            email_sent: true,
+            email_sent: false, // Los emails se enviarán cuando se genere el roadmap
             created_at: new Date().toISOString(),
           },
         ]);
@@ -100,23 +99,10 @@ export async function scheduleDiagnosticSession(
         console.warn('⚠️ Error guardando en leads_analytics:', leadsError);
       }
 
-      // 3. Enviar email de confirmación al cliente
-      try {
-        await sendDiagnosticConfirmation(email, clientName);
-        console.log('✅ Email de confirmación enviado al cliente');
-      } catch (emailError) {
-        console.warn('⚠️ Error al enviar email de confirmación:', emailError);
-      }
+      // NOTA: Los emails ahora se envían cuando se genera el roadmap
+      // Esto asegura que el usuario reciba un único email con toda la información completa
 
-      // 4. Enviar notificación al equipo comercial
-      try {
-        await sendLeadNotification(clientName, email, company, mainChallenge, context);
-        console.log('✅ Notificación de nuevo lead enviada al equipo');
-      } catch (notifyError) {
-        console.warn('⚠️ Error al enviar notificación de lead:', notifyError);
-      }
-
-      // 5. Retornar la sesión guardada
+      // Retornar la sesión guardada
       return {
         id: data.id,
         clientName: data.client_name,
@@ -125,8 +111,7 @@ export async function scheduleDiagnosticSession(
         scheduledAt: new Date(data.scheduled_at),
         status: 'completed',
         createdAt: new Date(data.created_at),
-      };
-    } catch (supabaseError) {
+      };    } catch (supabaseError) {
       console.warn('⚠️ Supabase no disponible, usando mock data:', supabaseError);
       
       // Fallback: Mock data cuando Supabase no esté disponible
@@ -140,21 +125,7 @@ export async function scheduleDiagnosticSession(
         createdAt: new Date(),
       };
 
-      // Intentar enviar emails aunque Supabase falle
-      try {
-        await sendDiagnosticConfirmation(email, clientName);
-        console.log('✅ Email de confirmación enviado al cliente');
-      } catch (emailError) {
-        console.warn('⚠️ Error al enviar email de confirmación:', emailError);
-      }
-
-      try {
-        await sendLeadNotification(clientName, email, company, mainChallenge, context);
-        console.log('✅ Notificación de nuevo lead enviada al equipo');
-      } catch (notifyError) {
-        console.warn('⚠️ Error al enviar notificación de lead:', notifyError);
-      }
-
+      // NOTA: Los emails se enviarán cuando se genere el roadmap
       console.log('✅ Usando mock session (Supabase no disponible)');
       return mockSession;
     }
