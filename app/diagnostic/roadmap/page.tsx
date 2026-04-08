@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import TopNavBar from '@/src/frontend/components/TopNavBar';
 import RoadmapHero from '@/src/frontend/components/RoadmapHero';
@@ -33,7 +33,28 @@ interface RoadmapData {
   status: string;
 }
 
-export default function Page() {
+function RoadmapLoadingFallback() {
+  return (
+    <>
+      <TopNavBar />
+      <main className="max-w-7xl mx-auto px-8 py-12 flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="mb-4">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+          <h2 className="text-2xl font-bold text-on-background mb-2">
+            Cargando tu roadmap...
+          </h2>
+          <p className="text-on-surface-variant">
+            Por favor espera mientras recuperamos tu información.
+          </p>
+        </div>
+      </main>
+    </>
+  );
+}
+
+function RoadmapContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('sessionId');
   const [roadmapData, setRoadmapData] = useState<RoadmapData | null>(null);
@@ -127,9 +148,9 @@ export default function Page() {
       </>
     );
   }
-
   return (
-    <>      <TopNavBar />
+    <>
+      <TopNavBar />
       <main className="max-w-7xl mx-auto px-8 py-12">
         <div id="roadmap-content" className="bg-white">
           <RoadmapHero />
@@ -219,7 +240,8 @@ export default function Page() {
                 <p className="text-on-surface-variant leading-relaxed">
                   {roadmapData.roadmap_content.recommendations}
                 </p>
-              </div>            </section>
+              </div>
+            </section>
           )}
 
           <SummaryCards summary={roadmapData?.roadmap_content?.summary} />
@@ -227,5 +249,13 @@ export default function Page() {
         <CTASection />
       </main>
     </>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<RoadmapLoadingFallback />}>
+      <RoadmapContent />
+    </Suspense>
   );
 }

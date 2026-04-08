@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import TopNavBar from '@/src/frontend/components/TopNavBar';
 
@@ -39,6 +39,23 @@ const terminalLines: TerminalLine[] = [
 ];
 
 export default function ProcessingPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen bg-surface">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-on-surface-variant">Cargando análisis de IA...</p>
+          </div>
+        </div>
+      }
+    >
+      <ProcessingContent />
+    </Suspense>
+  );
+}
+
+function ProcessingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('sessionId');

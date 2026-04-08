@@ -1,4 +1,5 @@
 import { supabaseServer } from '../config/supabase';
+import { resend, sendRoadmapGenerated, sendRoadmapNotificationToTeam } from '../config/resend';
 import dns from 'dns';
 
 dns.setDefaultResultOrder('ipv4first');
@@ -34,8 +35,7 @@ export interface RoadmapGenerated {
 // Función fallback para generar roadmap cuando la IA no está disponible
 function generateFallbackRoadmap(mainChallenge: string, context: string, company: string, employeeCount: string): RoadmapGenerated {
   // Mapear desafíos a roadmaps específicos
-  const challengeMap: Record<string, () => RoadmapGenerated> = {
-    'cost-overruns': () => ({
+  const challengeMap: Record<string, () => RoadmapGenerated> = {    'cost-overruns': () => ({
       stages: [
         {
           number: 1,
@@ -74,8 +74,18 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
       roi_estimate: 140,
       timeline_months: 5,
       keyMetrics: ['Reducción de costos operacionales', 'Mejora en eficiencia de gastos', 'ROI de inversión en IA'],
-    }),
-    'bottlenecks': () => ({
+      businessContext: {
+        mainChallenge: 'Sobrecostos operativos',
+        affectedArea: 'Procesos manuales y sistemas obsoletos',
+        currentConsequence: 'Gastos excesivos sin visibilidad clara',
+        objective: 'Reducir costos operacionales mediante automatización inteligente',
+      },
+      summary: {
+        startingPoint: 'Análisis de gastos actuales para identificar drenajes financieros',
+        expectedImpact: 'Reducción del 30-40% en costos operacionales mediante automatización',
+        successMetric: 'Ahorro mensual verificado y aumento de margen operativo',
+      },
+    }),    'bottlenecks': () => ({
       stages: [
         {
           number: 1,
@@ -114,8 +124,18 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
       roi_estimate: 110,
       timeline_months: 5,
       keyMetrics: ['Reducción de ciclo de proceso', 'Capacidad de procesamiento', 'Velocidad de entrega'],
-    }),
-    'chaos': () => ({
+      businessContext: {
+        mainChallenge: 'Cuellos de botella críticos',
+        affectedArea: 'Procesos interdepartamentales y workflows',
+        currentConsequence: 'Retrasos operacionales y capacidad limitada',
+        objective: 'Eliminar bloqueos y aumentar velocidad de procesamiento',
+      },
+      summary: {
+        startingPoint: 'Identificación de procesos secuenciales que ralentizan la operación',
+        expectedImpact: 'Aumento de 30-50% en velocidad de procesamiento',
+        successMetric: 'Reducción de ciclo de proceso y aumento de capacidad operativa',
+      },
+    }),    'chaos': () => ({
       stages: [
         {
           number: 1,
@@ -154,8 +174,18 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
       roi_estimate: 85,
       timeline_months: 5,
       keyMetrics: ['Consistencia operacional', 'Reducción de errores', 'Satisfacción de equipos'],
-    }),
-    'other': () => ({
+      businessContext: {
+        mainChallenge: 'Procesos caóticos y falta de estandarización',
+        affectedArea: 'Toda la organización - departamentos silos',
+        currentConsequence: 'Inconsistencia, errores frecuentes, baja eficiencia',
+        objective: 'Crear estructura operacional con procesos estandarizados',
+      },
+      summary: {
+        startingPoint: 'Documentación y mapeo de procesos actuales para crear base de gobernanza',
+        expectedImpact: 'Reducción de errores y aumento de previsibilidad operativa',
+        successMetric: 'Adopción de procesos estándar y mejora en métrica de consistencia',
+      },
+    }),    'other': () => ({
       stages: [
         {
           number: 1,
@@ -194,6 +224,17 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
       roi_estimate: 125,
       timeline_months: 6,
       keyMetrics: ['Reducción de tiempo de procesamiento', 'Mejora en precisión operativa', 'Aumento de capacidad de respuesta'],
+      businessContext: {
+        mainChallenge: 'Desafío operacional personalizado',
+        affectedArea: 'Áreas críticas identificadas en diagnóstico',
+        currentConsequence: 'Impacto operacional específico del contexto',
+        objective: 'Mejorar eficiencia mediante solución personalizada con IA',
+      },
+      summary: {
+        startingPoint: 'Análisis detallado del contexto operativo actual',
+        expectedImpact: 'Mejora significativa en eficiencia y capacidad operativa',
+        successMetric: 'Adopción de solución y métricas de mejora medibles',
+      },
     }),
   };
   // Obtener el roadmap específico para el desafío, o usar default
@@ -481,12 +522,69 @@ Genera el roadmap COMPLETO y PERSONALIZADO ahora:
       
       roadmapResult = data;
       roadmapError = error;
-    }
-
-    if (roadmapError) {
+    }    if (roadmapError) {
       console.error('⚠️ Error guardando roadmap en roadmap_results:', roadmapError);
     } else {
       console.log('✅ Roadmap guardado/actualizado en roadmap_results:', roadmapResult?.id);
+    }
+
+    // 📧 ENVIAR EMAILS DESPUÉS DE GENERAR EL ROADMAP
+    console.log('📧 Obtener datos del cliente para enviar emails...');
+    
+    try {
+      // Obtener datos del cliente desde la sesión de diagnóstico
+      const { data: sessionData, error: sessionError } = await supabaseServer()
+        .from('diagnostic_sessions')
+        .select('*')
+        .eq('id', sessionId)
+        .single();
+
+      if (sessionError || !sessionData) {
+        console.error('⚠️ No se encontraron datos de la sesión:', sessionError);
+        return roadmapData;
+      }
+
+      const clientEmail = sessionData.email;
+      const clientName = sessionData.client_name;
+      const companyName = sessionData.company;
+      const mainChallengeName = sessionData.main_challenge;
+      const contextDescription = sessionData.context;
+
+      // 📨 EMAIL 1: AL CLIENTE - Roadmap generado
+      console.log(`📨 Enviando roadmap generado a cliente: ${clientEmail}`);
+      
+      try {
+        await sendRoadmapGenerated(
+          clientEmail,
+          clientName,
+          roadmapData,
+          companyName
+        );
+        console.log('✅ Email al cliente enviado exitosamente');
+      } catch (emailError) {
+        console.error('⚠️ Error enviando email al cliente:', emailError);
+      }
+
+      // 📨 EMAIL 2: AL EQUIPO (NOTIFICATION_EMAIL) - Notificación de roadmap generado
+      console.log(`📨 Enviando notificación de roadmap al equipo: ${process.env.NOTIFICATION_EMAIL}`);
+      
+      try {
+        await sendRoadmapNotificationToTeam(
+          clientName,
+          clientEmail,
+          companyName,
+          mainChallengeName,
+          contextDescription,
+          roadmapData
+        );
+        console.log('✅ Notificación al equipo enviada exitosamente');
+      } catch (emailError) {
+        console.error('⚠️ Error enviando notificación al equipo:', emailError);
+      }
+
+    } catch (error) {
+      console.error('❌ Error en proceso de envío de emails:', error);
+      // No fallar la generación de roadmap si falla el envío de emails
     }
 
     return roadmapData;
