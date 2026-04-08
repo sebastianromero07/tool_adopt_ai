@@ -1,6 +1,20 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# ==========================================
+# ENVIRONMENT VARIABLES - SECRETOS
+# ==========================================
+# ⚠️ CRITICAL: Never commit these files
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.example  # Template files for env variables
+
+# ==========================================
+# DEPENDENCIES
+# ==========================================
 /node_modules
 /.pnp
 .pnp.*
@@ -10,32 +24,104 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
+# ==========================================
+# TESTING
+# ==========================================
 /coverage
+.nyc_output
 
-# next.js
+# ==========================================
+# BUILD OUTPUT
+# ==========================================
 /.next/
 /out/
-
-# production
 /build
+/dist
 
-# misc
+# ==========================================
+# PRODUCTION BUILD ARTIFACTS
+# ==========================================
+*.tsbuildinfo
+next-env.d.ts
+
+# ==========================================
+# MISC FILES
+# ==========================================
 .DS_Store
 *.pem
+.AppleDouble
+.LSOverride
 
-# debug
+# ==========================================
+# DEBUG & LOG FILES
+# ==========================================
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+lerna-debug.log*
+.wrangler/
+.env.*.mjs
 
-# env files (can opt-in for committing if needed)
-.env*
+# ==========================================
+# IDE & EDITOR FILES
+# ==========================================
+.vscode
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.VSCode
+.vscode-test
+.swcache
 
-# vercel
+# ==========================================
+# OS SPECIFIC
+# ==========================================
+Thumbs.db
+ehthumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.localized
+
+# ==========================================
+# VERCEL & DEPLOYMENT
+# ==========================================
 .vercel
+*.vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# ==========================================
+# IDE TEMP FILES
+# ==========================================
+*.sublime-workspace
+*.sublime-project
+.fleet
+.idea/
+
+# ==========================================
+# API KEY BACKUPS (Just in case)
+# ==========================================
+*.key
+*.pem
+*.cert
+.private
+
+# ==========================================
+# CACHE
+# ==========================================
+.eslintcache
+.stylelintcache
+.cache/
+.turbo/
+
+# ==========================================
+# DATABASE
+# ==========================================
+*.db
+*.sqlite
+*.sqlite3
