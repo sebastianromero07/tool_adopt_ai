@@ -17,6 +17,17 @@ interface RoadmapData {
     roi_estimate: number;
     timeline_months: number;
     keyMetrics: string[];
+    businessContext?: {
+      mainChallenge: string;
+      affectedArea: string;
+      currentConsequence: string;
+      objective: string;
+    };
+    summary?: {
+      startingPoint: string;
+      expectedImpact: string;
+      successMetric: string;
+    };
   };
   generated_at: string;
   status: string;
@@ -118,12 +129,13 @@ export default function Page() {
   }
 
   return (
-    <>
-      <TopNavBar />
+    <>      <TopNavBar />
       <main className="max-w-7xl mx-auto px-8 py-12">
         <div id="roadmap-content" className="bg-white">
           <RoadmapHero />
-          <BusinessContextSection />
+          <BusinessContextSection 
+            businessContext={roadmapData?.roadmap_content?.businessContext}
+          />
           
           {/* Mostrar el roadmap generado por IA */}
           {roadmapData && roadmapData.roadmap_content && (
@@ -207,11 +219,10 @@ export default function Page() {
                 <p className="text-on-surface-variant leading-relaxed">
                   {roadmapData.roadmap_content.recommendations}
                 </p>
-              </div>
-            </section>
+              </div>            </section>
           )}
 
-          <SummaryCards />
+          <SummaryCards summary={roadmapData?.roadmap_content?.summary} />
         </div>
         <CTASection />
       </main>

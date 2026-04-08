@@ -1,4 +1,18 @@
-export default function SummaryCards() {
+interface SummaryCardsProps {
+  summary?: {
+    startingPoint: string;
+    expectedImpact: string;
+    successMetric: string;
+  };
+}
+
+export default function SummaryCards({ summary }: SummaryCardsProps) {
+  const content = summary || {
+    startingPoint: 'Fricción en el flujo de datos entre preventa e implementación que genera retrasos de 3 días.',
+    expectedImpact: 'Reducción del 40% en el tiempo de procesamiento de nuevos pedidos mediante automatización inteligente.',
+    successMetric: 'La precisión del agente IA en la clasificación automática de documentos operativos sin intervención humana.',
+  };
+
   return (
     <section className="mb-24 grid grid-cols-1 md:grid-cols-3 gap-8">
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-outline-variant/30">
@@ -9,7 +23,7 @@ export default function SummaryCards() {
           Problema que atacaremos primero
         </h3>
         <p className="text-on-surface-variant leading-relaxed">
-          Fricción en el flujo de datos entre preventa e implementación que genera retrasos de 3 días.
+          {content.startingPoint}
         </p>
       </div>
 
@@ -21,7 +35,7 @@ export default function SummaryCards() {
           Resultado operacional esperado
         </h3>
         <p className="text-on-surface-variant leading-relaxed">
-          Reducción del 40% en el tiempo de procesamiento de nuevos pedidos mediante automatización inteligente.
+          {content.expectedImpact}
         </p>
       </div>
 
@@ -33,7 +47,7 @@ export default function SummaryCards() {
           Qué validaremos primero
         </h3>
         <p className="text-on-surface-variant leading-relaxed">
-          La precisión del agente IA en la clasificación automática de documentos operativos sin intervención humana.
+          {content.successMetric}
         </p>
       </div>
     </section>

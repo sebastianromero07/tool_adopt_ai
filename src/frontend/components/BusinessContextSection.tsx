@@ -2,8 +2,22 @@
 
 import React from 'react';
 
-export default function BusinessContextSection() {
-  const cards = [
+interface BusinessContextSectionProps {
+  businessContext?: {
+    mainChallenge: string;
+    affectedArea: string;
+    currentConsequence: string;
+    objective: string;
+  };
+}
+
+export default function BusinessContextSection({ businessContext }: BusinessContextSectionProps) {
+  const cards = businessContext ? [
+    { icon: 'troubleshoot', title: 'Desafío principal',   text: businessContext.mainChallenge },
+    { icon: 'account_tree', title: 'Área afectada',       text: businessContext.affectedArea },
+    { icon: 'warning',      title: 'Consecuencia actual', text: businessContext.currentConsequence },
+    { icon: 'target',       title: 'Objetivo',            text: businessContext.objective },
+  ] : [
     { icon: 'troubleshoot', title: 'Desafío principal',   text: 'Cuellos de botella críticos para escalar la operación actual.' },
     { icon: 'account_tree', title: 'Área afectada',       text: 'Operaciones y coordinación interna entre departamentos.' },
     { icon: 'warning',      title: 'Consecuencia actual', text: 'Demoras, retrabajo constante y pérdida total de visibilidad operativa.' },
