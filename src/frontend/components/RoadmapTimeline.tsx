@@ -28,7 +28,7 @@ const stages = [
     number: 3,
     title: 'Implementación guiada',
     phase: 'Ejecución Activa',
-    badgeColor: 'bg-green-100 text-[#2A915E]',
+    badgeColor: 'bg-[#dcfce7] text-[#2A915E]',
     focus: 'Primer frente de ejecución',
     validation: 'Uso real en campo',
     result: 'Solución operativa inicial',
@@ -38,11 +38,11 @@ const stages = [
     number: 4,
     title: 'Adopción y mejora continua',
     phase: 'Escalabilidad & Feedback',
-    badgeColor: 'bg-slate-200 text-slate-800',
+    badgeColor: 'bg-[#e2e8f0] text-[#1e293b]',
     focus: 'Estabilidad operativa',
     validation: 'Impacto y feedback',
     result: 'Expansión con criterio',
-    resultColor: 'text-slate-800',
+    resultColor: 'text-[#1e293b]',
   },
 ];
 
@@ -73,7 +73,6 @@ function IterativeLoopComponent() {
         </svg>
       </div>
 
-      {/* Forzamos el fondo blanco claro aquí */}
       <div className="bg-white border border-[#0077B6]/20 p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col md:flex-row items-center gap-8 relative overflow-hidden group">
         <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
           <span className="material-symbols-outlined text-[120px]">sync</span>
@@ -112,10 +111,50 @@ function IterativeLoopComponent() {
   );
 }
 
-// --- SOLO EL COMPONENTE DE LA TIMELINE (sin main, sin header, sin footer)
-export default function RoadmapTimeline() {
+// --- PÁGINA PRINCIPAL ---
+export default function Page() {
   return (
-    <>
+    <main className="max-w-7xl mx-auto px-8 py-12 bg-[#f7f9fb]">
+      {/* HEADER SECTION */}
+      <header className="mb-16">
+        <h1 className="font-headline text-5xl md:text-6xl font-extrabold text-[#0077B6] tracking-tight mb-4">
+          Roadmap de Transformación IA
+        </h1>
+        <p className="text-[#404850] text-xl max-w-2xl leading-relaxed">
+          Una ruta estratégica diseñada para optimizar la arquitectura operativa y escalar la capacidad de respuesta a través de inteligencia aplicada.
+        </p>
+      </header>
+
+      {/* 01 / CONTEXTO */}
+      <section className="mb-20">
+        <div className="flex items-baseline gap-4 mb-8">
+          <span className="text-[#745b00] font-headline font-bold text-sm tracking-widest uppercase">01 / Contexto</span>
+          <h2 className="font-headline text-3xl font-bold text-[#191c1e]">Lectura del negocio</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white p-6 rounded-xl border-l-4 border-[#0077B6] shadow-sm">
+            <span className="material-symbols-outlined text-[#0077B6] mb-4">troubleshoot</span>
+            <h3 className="font-headline font-bold text-lg mb-2 text-[#191c1e]">Desafío principal</h3>
+            <p className="text-[#404850] text-sm">Cuellos de botella críticos para escalar la operación actual.</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl border-l-4 border-[#0077B6] shadow-sm">
+            <span className="material-symbols-outlined text-[#0077B6] mb-4">account_tree</span>
+            <h3 className="font-headline font-bold text-lg mb-2 text-[#191c1e]">Área afectada</h3>
+            <p className="text-[#404850] text-sm">Operaciones y coordinación interna entre departamentos.</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl border-l-4 border-[#0077B6] shadow-sm">
+            <span className="material-symbols-outlined text-[#0077B6] mb-4">warning</span>
+            <h3 className="font-headline font-bold text-lg mb-2 text-[#191c1e]">Consecuencia actual</h3>
+            <p className="text-[#404850] text-sm">Demoras, retrabajo constante y pérdida total de visibilidad operativa.</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl border-l-4 border-[#0077B6] shadow-sm">
+            <span className="material-symbols-outlined text-[#0077B6] mb-4">target</span>
+            <h3 className="font-headline font-bold text-lg mb-2 text-[#191c1e]">Objetivo</h3>
+            <p className="text-[#404850] text-sm">Reducir fricción operativa y aumentar drásticamente la capacidad de respuesta.</p>
+          </div>
+        </div>
+      </section>
+
       {/* 02 / ESTRATEGIA (TIMELINE) */}
       <section className="mb-20">
         <div className="flex items-baseline gap-4 mb-12">
@@ -181,6 +220,45 @@ export default function RoadmapTimeline() {
           ))}
         </div>
       </section>
-    </>
+
+      {/* SUMMARY CARDS */}
+      <section className="mb-24 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-[#bfc7d2]/30">
+          <h4 className="text-[#745b00] font-bold text-xs uppercase tracking-widest mb-4">Punto de Partida</h4>
+          <h3 className="font-headline text-xl font-bold mb-3 text-[#191c1e]">Problema que atacaremos primero</h3>
+          <p className="text-[#404850] leading-relaxed">Fricción en el flujo de datos entre preventa e implementación que genera retrasos de 3 días.</p>
+        </div>
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-[#bfc7d2]/30">
+          <h4 className="text-[#0077B6] font-bold text-xs uppercase tracking-widest mb-4">Impacto Esperado</h4>
+          <h3 className="font-headline text-xl font-bold mb-3 text-[#191c1e]">Resultado operacional esperado</h3>
+          <p className="text-[#404850] leading-relaxed">Reducción del 40% en el tiempo de procesamiento de nuevos pedidos mediante automatización inteligente.</p>
+        </div>
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-[#bfc7d2]/30">
+          <h4 className="text-[#2A915E] font-bold text-xs uppercase tracking-widest mb-4">Métrica de Éxito</h4>
+          <h3 className="font-headline text-xl font-bold mb-3 text-[#191c1e]">Qué validaremos primero</h3>
+          <p className="text-[#404850] leading-relaxed">La precisión del agente IA en la clasificación automática de documentos operativos sin intervención humana.</p>
+        </div>
+      </section>
+
+      {/* FOOTER CTA SECTION */}
+      <section className="bg-[#101c2e] text-white rounded-3xl p-12 overflow-hidden relative shadow-lg">
+        <div className="relative z-10 max-w-2xl">
+          <h2 className="font-headline text-4xl font-extrabold mb-4 leading-tight">Listo para validar tu primera intervención</h2>
+          <p className="text-slate-300 text-lg mb-8">Agenda una sesión de diagnóstico personalizada con nuestro equipo consultor para definir tu primer caso de uso viable.</p>
+          <div className="flex flex-wrap gap-4">
+            <button className="bg-[#0077B6] text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#0095D9] transition-all flex items-center gap-2 shadow-md">
+              <span className="material-symbols-outlined">event</span>
+              Agendar diagnóstico
+            </button>
+            <button className="bg-white/10 text-white border border-white/20 px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all flex items-center gap-2">
+              <span className="material-symbols-outlined">download</span>
+              Descargar roadmap
+            </button>
+          </div>
+        </div>
+        <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-[#0077B6]/20 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute right-20 top-0 w-40 h-40 bg-[#745b00]/20 rounded-full blur-[60px] pointer-events-none"></div>
+      </section>
+    </main>
   );
 }

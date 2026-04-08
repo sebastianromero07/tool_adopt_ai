@@ -11,18 +11,27 @@ export async function scheduleDiagnosticSession(
   customChallenge: string | null,
   context: string,
   employeeCount: string
-): Promise<DiagnosticSession> {
-  try {
+): Promise<DiagnosticSession> {  try {
     // 1. Intentar guardar en Supabase
     try {
       const supabase = supabaseServer();
       
-      const { data, error } = await supabase
+      // Primero verificar si ya existe un diagnóstico con este email
+      const { data: existingSession } = await supabase
         .from('diagnostic_sessions')
-        .insert([
-          {
+        .select('id')
+        .eq('email', email)
+        .single();
+
+      let data;
+      let error;
+
+      if (existingSession) {
+        // Si existe, actualizar los datos
+        const { data: updatedData, error: updateError } = await supabase
+          .from('diagnostic_sessions')
+          .update({
             client_name: clientName,
-            email: email,
             company: company,
             position: position,
             main_challenge: mainChallenge,
@@ -31,16 +40,46 @@ export async function scheduleDiagnosticSession(
             employee_count: employeeCount,
             scheduled_at: new Date().toISOString(),
             status: 'completed',
-            created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
-          },
-        ])
-        .select()
-        .single();
+          })
+          .eq('email', email)
+          .select()
+          .single();
+        
+        data = updatedData;
+        error = updateError;
+      } else {
+        // Si no existe, insertar nuevo
+        const { data: insertedData, error: insertError } = await supabase
+          .from('diagnostic_sessions')
+          .insert([
+            {
+              client_name: clientName,
+              email: email,
+              company: company,
+              position: position,
+              main_challenge: mainChallenge,
+              custom_challenge: customChallenge || null,
+              context: context,
+              employee_count: employeeCount,
+              scheduled_at: new Date().toISOString(),
+              status: 'completed',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            },
+          ])
+          .select()
+          .single();
+        
+        data = insertedData;
+        error = insertError;
+      }
 
       if (error) {
         throw new Error(`Supabase error: ${error.message}`);
-      }      console.log('✅ Diagnóstico guardado en Supabase:', data.id);
+      }
+      
+      console.log('✅ Diagnóstico guardado/actualizado en Supabase:', data.id);
 
       // 2. Guardar en leads_analytics para análisis
       try {

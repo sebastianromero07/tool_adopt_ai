@@ -1,4 +1,7 @@
 import { supabaseServer } from '../config/supabase';
+import dns from 'dns';
+
+dns.setDefaultResultOrder('ipv4first');
 
 export interface RoadmapGenerated {
   stages: Array<{
@@ -15,6 +18,50 @@ export interface RoadmapGenerated {
   keyMetrics: string[];
 }
 
+// Función fallback para generar roadmap cuando la IA no está disponible
+function generateFallbackRoadmap(mainChallenge: string, context: string): RoadmapGenerated {
+  return {
+    stages: [
+      {
+        number: 1,
+        title: 'Diagnóstico Profundo',
+        description: 'Análisis detallado de procesos, sistemas y áreas de fricción operativa',
+        duration: '4 semanas',
+        focus: 'Entender la situación actual',
+        deliverables: ['Análisis de procesos', 'Mapeo de sistemas', 'Identificación de puntos de dolor'],
+      },
+      {
+        number: 2,
+        title: 'Diseño de Solución con IA',
+        description: 'Diseño de la arquitectura personalizada aprovechando inteligencia artificial',
+        duration: '6 semanas',
+        focus: 'Solución adaptada al contexto',
+        deliverables: ['Arquitectura propuesta', 'Roadmap técnico', 'Plan de implementación'],
+      },
+      {
+        number: 3,
+        title: 'Implementación Piloto',
+        description: 'Piloto controlado en un caso de uso prioritario para validar resultados',
+        duration: '8 semanas',
+        focus: 'Validación en vivo',
+        deliverables: ['Módulo piloto funcional', 'Documentación técnica', 'Capacitación inicial'],
+      },
+      {
+        number: 4,
+        title: 'Escalamiento y Adopción',
+        description: 'Expansión a toda la organización con soporte continuo',
+        duration: '12 semanas',
+        focus: 'Adopción completa y sostenibilidad',
+        deliverables: ['Integración total', 'Capacitación integral', 'Soporte operativo'],
+      },
+    ],
+    recommendations: 'Basándose en tu contexto operativo, se recomienda un enfoque gradual priorizando los procesos que generan mayor fricción. Implementa automatización en paralelo con cambios organizacionales.',
+    roi_estimate: 125,
+    timeline_months: 6,
+    keyMetrics: ['Reducción de tiempo de procesamiento', 'Mejora en precisión operativa', 'Aumento de capacidad de respuesta'],
+  };
+}
+
 export async function generateRoadmapWithAI(
   sessionId: string,
   mainChallenge: string,
@@ -23,7 +70,7 @@ export async function generateRoadmapWithAI(
   employeeCount: string
 ): Promise<RoadmapGenerated> {
   try {
-    console.log('🤖 Iniciando generación de roadmap con IA...');
+    console.log('🤖 Iniciando generación de roadmap con Google Gemini...');
 
     const prompt = `Eres un experto en transformación digital con IA. Basándote en esta información, genera un roadmap estratégico detallado:
 
@@ -56,93 +103,73 @@ IMPORTANTE:
 - Cada etapa debe ser específica para el contexto del cliente
 - Los números de ROI deben ser realistas (15-300%)
 - El timeline debe ser práctico (3-24 meses)
-- Responde SOLO con JSON válido, sin markdown
+- Responde SOLO con JSON válido, sin markdown ni etiquetas de código.
 
 Genera el roadmap ahora:`;
 
-    // Usar OpenRoute (que es lo que tienes en OPENAI_API_KEY)
-    const response = await fetch('https://openrouter.io/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-        'X-Title': 'AdoptAI',
-      },
-      body: JSON.stringify({
-        model: 'openai/gpt-4-turbo',
-        messages: [
-          {
-            role: 'user',
-            content: prompt,
-          },
-        ],
-        temperature: 0.7,
-        max_tokens: 2048,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`OpenRoute API error: ${response.status} - ${JSON.stringify(errorData)}`);
-    }
-
-    const data = await response.json();
-    const responseText = data.choices[0].message.content;
-
-    console.log('📝 Respuesta de IA recibida, parseando JSON...');
-
-    // Parsear el JSON de la respuesta
     let roadmapData: RoadmapGenerated;
+    let usesFallback = false;
+
     try {
-      roadmapData = JSON.parse(responseText);
-    } catch (parseError) {
-      console.error('⚠️ Error al parsear JSON, usando datos fallback:', parseError);
-      roadmapData = {
-        stages: [
-          {
-            number: 1,
-            title: 'Diagnóstico Profundo',
-            description: 'Análisis detallado de procesos y sistemas actuales',
-            duration: '4 semanas',
-            focus: 'Entender el estado actual',
-            deliverables: ['Análisis de procesos', 'Mapeo de sistemas', 'Identificación de puntos de dolor'],
-          },
-          {
-            number: 2,
-            title: 'Diseño de Solución',
-            description: 'Diseño de la arquitectura de IA personalizada',
-            duration: '6 semanas',
-            focus: 'Solución personalizada',
-            deliverables: ['Arquitectura propuesta', 'Roadmap técnico', 'Plan de implementación'],
-          },
-          {
-            number: 3,
-            title: 'Implementación Piloto',
-            description: 'Piloto en un caso de uso prioritario',
-            duration: '8 semanas',
-            focus: 'Prueba de concepto',
-            deliverables: ['Módulo piloto', 'Documentación', 'Capacitación inicial'],
-          },
-          {
-            number: 4,
-            title: 'Escalamiento',
-            description: 'Expansión a toda la organización',
-            duration: '12 semanas',
-            focus: 'Adopción completa',
-            deliverables: ['Integración total', 'Capacitación completa', 'Soporte operativo'],
-          },
-        ],
-        recommendations: 'Basándose en el contexto proporcionado, se recomienda un enfoque gradual comenzando por automatización de procesos críticos.',
-        roi_estimate: 125,
-        timeline_months: 6,
-        keyMetrics: ['Reducción de tiempo de procesamiento', 'Mejora en precisión', 'Aumento de capacidad'],
-      };
+      // 1. Configuramos la URL de Google con la API Key en la URL
+      const apiKey = process.env.GOOGLE_API_KEY; // ¡Asegúrate de tener esto en tu .env.local!
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // 2. Estructura de body específica para Gemini
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { text: prompt }
+              ]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 8192,
+            // 👇 AGREGA ESTA LÍNEA MÁGICA 👇
+            responseMimeType: "application/json", 
+          }
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text(); 
+        throw new Error(`Google Gemini API error: ${response.status} - ${errorText}`);
+      }
+
+      const data = await response.json();
+      
+      // 3. Ruta de acceso a la respuesta en Gemini
+      let responseText = data.candidates[0].content.parts[0].text;
+
+      console.log('📝 Respuesta de IA recibida, parseando JSON...');
+
+      // Limpiamos la respuesta en caso de que Gemini añada etiquetas markdown (```json ... ```)
+      responseText = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+      // Parsear el JSON de la respuesta
+      try {
+        roadmapData = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('⚠️ Error al parsear JSON, usando datos fallback:', parseError);
+        usesFallback = true;
+        roadmapData = generateFallbackRoadmap(mainChallenge, context);
+      }
+    } catch (apiError) {
+      console.warn('⚠️ Error conectando con Google Gemini, usando fallback:', apiError);
+      usesFallback = true;
+      roadmapData = generateFallbackRoadmap(mainChallenge, context);
     }
 
-    console.log('✅ Roadmap generado exitosamente');
+    console.log(`✅ Roadmap generado ${usesFallback ? '(fallback)' : 'exitosamente'}`);
 
-    // 2. Guardar en Supabase - roadmap_results
+    // Guardar en Supabase - roadmap_results
     console.log('💾 Guardando roadmap en Supabase...');
     const { data: roadmapResult, error: roadmapError } = await supabaseServer()
       .from('roadmap_results')
@@ -163,9 +190,8 @@ Genera el roadmap ahora:`;
 
     if (roadmapError) {
       console.error('⚠️ Error guardando roadmap en roadmap_results:', roadmapError);
-      // No fallar, continuar
     } else {
-      console.log('✅ Roadmap guardado en roadmap_results:', roadmapResult.id);
+      console.log('✅ Roadmap guardado en roadmap_results:', roadmapResult?.id);
     }
 
     return roadmapData;
