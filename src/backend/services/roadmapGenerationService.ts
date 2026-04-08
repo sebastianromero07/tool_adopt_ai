@@ -165,17 +165,26 @@ Genera el roadmap ahora:`;
       console.warn('⚠️ Error conectando con Google Gemini, usando fallback:', apiError);
       usesFallback = true;
       roadmapData = generateFallbackRoadmap(mainChallenge, context);
-    }
-
-    console.log(`✅ Roadmap generado ${usesFallback ? '(fallback)' : 'exitosamente'}`);
+    }    console.log(`✅ Roadmap generado ${usesFallback ? '(fallback)' : 'exitosamente'}`);
 
     // Guardar en Supabase - roadmap_results
     console.log('💾 Guardando roadmap en Supabase...');
-    const { data: roadmapResult, error: roadmapError } = await supabaseServer()
+    
+    // Primero, verificar si ya existe un roadmap para esta sesión
+    const { data: existingRoadmap } = await supabaseServer()
       .from('roadmap_results')
-      .insert([
-        {
-          diagnostic_session_id: sessionId,
+      .select('id')
+      .eq('diagnostic_session_id', sessionId)
+      .maybeSingle();
+
+    let roadmapResult;
+    let roadmapError;
+
+    if (existingRoadmap) {
+      // Si existe, actualizar el más reciente
+      const { data, error } = await supabaseServer()
+        .from('roadmap_results')
+        .update({
           roadmap_content: roadmapData,
           stages: roadmapData.stages,
           recommendations: roadmapData.recommendations,
@@ -183,15 +192,40 @@ Genera el roadmap ahora:`;
           timeline_months: roadmapData.timeline_months,
           status: 'completed',
           generated_at: new Date().toISOString(),
-        },
-      ])
-      .select()
-      .single();
+        })
+        .eq('id', existingRoadmap.id)
+        .select()
+        .single();
+      
+      roadmapResult = data;
+      roadmapError = error;
+    } else {
+      // Si no existe, insertar uno nuevo
+      const { data, error } = await supabaseServer()
+        .from('roadmap_results')
+        .insert([
+          {
+            diagnostic_session_id: sessionId,
+            roadmap_content: roadmapData,
+            stages: roadmapData.stages,
+            recommendations: roadmapData.recommendations,
+            roi_estimate: roadmapData.roi_estimate,
+            timeline_months: roadmapData.timeline_months,
+            status: 'completed',
+            generated_at: new Date().toISOString(),
+          },
+        ])
+        .select()
+        .single();
+      
+      roadmapResult = data;
+      roadmapError = error;
+    }
 
     if (roadmapError) {
       console.error('⚠️ Error guardando roadmap en roadmap_results:', roadmapError);
     } else {
-      console.log('✅ Roadmap guardado en roadmap_results:', roadmapResult?.id);
+      console.log('✅ Roadmap guardado/actualizado en roadmap_results:', roadmapResult?.id);
     }
 
     return roadmapData;

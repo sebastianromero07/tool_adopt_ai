@@ -52,51 +52,44 @@ export default function CTASection() {
   };
 
   return (
-    <section className="bg-[#101c2e] text-white rounded-3xl p-12 overflow-hidden relative shadow-lg mt-12">
-      <div className="relative z-10 max-w-2xl">
-        <h2 className="font-headline text-4xl font-extrabold mb-4 leading-tight">
-          Listo para validar tu primera intervención
-        </h2>
-        <p className="text-slate-300 text-lg mb-8">
-          Agenda una sesión de diagnóstico personalizada con nuestro equipo consultor para definir tu primer caso de uso viable.
-        </p>
-        <div className="flex flex-wrap gap-4">
-          
-          <a 
-            href="https://api.whatsapp.com/send/?phone=51991735542&text=Hola%2C+vi+su+web+y+me+interesa+agendar+una+llamada+con+AdoptAI&type=phone_number&app_absent=0"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-[#0077B6] text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#0095D9] transition-all flex items-center gap-2 shadow-md"
-          >
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>event</span>
-            Agendar diagnóstico
-          </a>
-
-          <button 
-            onClick={handleDownloadPDF}
-            disabled={isDownloading}
-            className={`bg-white/10 text-white border border-white/20 px-8 py-4 rounded-xl font-bold text-lg transition-all flex items-center gap-2 ${
-              isDownloading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-white/20 cursor-pointer'
-            }`}
-          >
-            {isDownloading ? (
-              <>
-                <span className="material-symbols-outlined animate-[spin_1s_linear_infinite]" style={{ fontVariationSettings: "'FILL' 1" }}>sync</span>
-                Generando PDF...
-              </>
-            ) : (
-              <>
-                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>download</span>
-                Descargar roadmap
-              </>
-            )}
-          </button>
-
-        </div>
+  <section className="bg-on-secondary-fixed text-white rounded-3xl p-12 overflow-hidden relative">
+    {/* Contenido */}
+    <div className="relative z-10 max-w-2xl">
+      <h2 className="font-headline text-4xl font-extrabold mb-4 leading-tight">
+        Listo para validar tu primera intervención
+      </h2>
+      <p className="text-slate-300 text-lg mb-8">
+        Agenda una sesión de diagnóstico personalizada con nuestro equipo consultor
+        para definir tu primer caso de uso viable.
+      </p>
+      <div className="flex flex-wrap gap-4">
+        <button className="bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary-container transition-all flex items-center gap-2">
+          <span className="material-symbols-outlined">event</span>
+          Agendar diagnóstico
+        </button>
+        <button
+          onClick={handleDownloadPDF}
+          disabled={isDownloading}
+          className="bg-white/10 text-white border border-white/20 px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all flex items-center gap-2 disabled:opacity-70"
+        >
+          {isDownloading ? (
+            <>
+              <span className="material-symbols-outlined animate-spin">sync</span>
+              Generando PDF...
+            </>
+          ) : (
+            <>
+              <span className="material-symbols-outlined">download</span>
+              Descargar roadmap
+            </>
+          )}
+        </button>
       </div>
-      
-      <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-[#0077B6]/20 rounded-full blur-[100px] pointer-events-none"></div>
-      <div className="absolute right-20 top-0 w-40 h-40 bg-[#745b00]/20 rounded-full blur-[60px] pointer-events-none"></div>
-    </section>
-  );
+    </div>
+
+    {/* Decoración blur */}
+    <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-primary/20 rounded-full blur-[100px]" />
+    <div className="absolute right-20 top-0 w-40 h-40 bg-tertiary/20 rounded-full blur-[60px]" />
+  </section>
+);
 }

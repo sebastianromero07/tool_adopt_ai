@@ -11,17 +11,17 @@ export async function GET(request: NextRequest) {
         { error: 'sessionId es requerido' },
         { status: 400 }
       );
-    }
-
-    console.log(`🔍 Buscando roadmap para sesión: ${sessionId}`);
+    }    console.log(`🔍 Buscando roadmap para sesión: ${sessionId}`);
 
     const supabase = supabaseServer();
 
-    // Obtener el roadmap de Supabase
+    // Obtener el roadmap de Supabase (ordenar por generated_at que es el timestamp de generación)
     const { data, error } = await supabase
       .from('roadmap_results')
       .select('*')
       .eq('diagnostic_session_id', sessionId)
+      .order('generated_at', { ascending: false })
+      .limit(1)
       .single();
 
     if (error || !data) {

@@ -1,30 +1,109 @@
+/* 1. Fuentes primero */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Inter:wght@100..900&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
 @import 'tailwindcss';
 
-@layer utilities {
+/* 2. @theme es la forma correcta de extender el tema en Tailwind v4
+      --color-X       → genera bg-X, text-X, border-X, etc.
+      --font-X        → genera font-X
+*/
+@theme {
+  /* Fuentes */
+  --font-headline: "Manrope", sans-serif;
+  --font-body:     "Inter",   sans-serif;
+  --font-label:    "Inter",   sans-serif;
+
+  /* Colores MD3 */
+  --color-primary:                   #006196;
+  --color-on-primary:                #ffffff;
+  --color-primary-container:         #007abc;
+  --color-primary-fixed:             #cde5ff;
+  --color-primary-fixed-dim:         #95ccff;
+  --color-inverse-primary:           #95ccff;
+  --color-on-primary-fixed:          #001d32;
+  --color-on-primary-fixed-variant:  #004a75;
+  --color-on-primary-container:      #fdfcff;
+
+  --color-secondary:                  #535f74;
+  --color-on-secondary:               #ffffff;
+  --color-secondary-container:        #d4e0f9;
+  --color-secondary-fixed:            #d7e3fc;
+  --color-secondary-fixed-dim:        #bbc7df;
+  --color-on-secondary-container:     #586378;
+  --color-on-secondary-fixed:         #101c2e;
+  --color-on-secondary-fixed-variant: #3c475b;
+
+  --color-tertiary:                   #745b00;
+  --color-on-tertiary:                #ffffff;
+  --color-tertiary-container:         #d0a600;
+  --color-tertiary-fixed:             #ffe08a;
+  --color-tertiary-fixed-dim:         #f0c116;
+  --color-on-tertiary-container:      #4f3e00;
+  --color-on-tertiary-fixed:          #241a00;
+  --color-on-tertiary-fixed-variant:  #574400;
+
+  --color-error:             #ba1a1a;
+  --color-on-error:          #ffffff;
+  --color-error-container:   #ffdad6;
+  --color-on-error-container:#93000a;
+
+  --color-background:        #f7f9fb;
+  --color-on-background:     #191c1e;
+
+  --color-surface:                   #f7f9fb;
+  --color-surface-dim:               #d8dadc;
+  --color-surface-bright:            #f7f9fb;
+  --color-surface-tint:              #006399;
+  --color-surface-variant:           #e0e3e5;
+  --color-surface-container-lowest:  #ffffff;
+  --color-surface-container-low:     #f2f4f6;
+  --color-surface-container:         #eceef0;
+  --color-surface-container-high:    #e6e8ea;
+  --color-surface-container-highest: #e0e3e5;
+
+  --color-on-surface:         #191c1e;
+  --color-on-surface-variant: #404850;
+  --color-inverse-surface:    #2d3133;
+  --color-inverse-on-surface: #eff1f3;
+
+  --color-outline:         #707881;
+  --color-outline-variant: #bfc7d2;
+}
+
+/* 3. @layer base: estilos base del documento */
+@layer base {
+  body {
+    @apply bg-surface font-body text-on-surface;
+  }
+
   .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
+}
 
+/* 4. @keyframes FUERA de @layer para garantizar alcance global */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+/* 5. Utilidades personalizadas */
+@layer utilities {
   .editorial-grid {
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 2rem;
   }
 
-  .iterative-loop-path {
-    stroke-dasharray: 8 4;
-    animation: dash 30s linear infinite;
-  }
-
-  @keyframes dash {
-    to {
-      stroke-dashoffset: -100;
-    }
-  }
-
   @media (max-width: 768px) {
     .editorial-grid {
       grid-template-columns: 1fr;
     }
+  }
+
+  .iterative-loop-path {
+    stroke-dasharray: 8 4;
+    animation: dash 30s linear infinite;
   }
 }
