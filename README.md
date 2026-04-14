@@ -1,7 +1,6 @@
 # AdoptAI — Simulador de Transformación Operativa
 
-**Demo en vivo:** [enlace]  
-**Video:** [Loom / YouTube — 2-3 min]
+**Demo en vivo:** [[tool-adopt-ai.vercel.app](https://tool-adopt-ai.vercel.app/diagnostic/step1)]  
 
 ---
 
