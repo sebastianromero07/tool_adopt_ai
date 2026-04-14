@@ -138,9 +138,7 @@ export default function DiagnosticModal({ isOpen, onClose }: DiagnosticModalProp
               className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:outline-none focus:border-primary"
               required
             />
-          </div>
-
-          {message && (
+          </div>          {message && (
             <div className={`p-4 rounded-lg text-sm ${message.includes('Error') ? 'bg-error/10 text-error' : 'bg-[#2A915E]/10 text-[#2A915E]'}`}>
               {message}
             </div>
@@ -154,6 +152,21 @@ export default function DiagnosticModal({ isOpen, onClose }: DiagnosticModalProp
             {isLoading ? 'Agendando...' : 'Agendar diagnóstico'}
           </button>
         </form>
+
+        <div className="mt-6 pt-6 border-t border-outline-variant">
+          <p className="text-center text-sm text-on-surface-variant mb-4">
+            ¿Prefieres comunicarte por WhatsApp?
+          </p>
+          <a
+            href="https://api.whatsapp.com/send/?phone=51991735542&text=Hola%2C%20me%20interesa%20agendar%20un%20diagnóstico%20de%20AdoptAI&type=phone_number&app_absent=0"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 rounded-lg font-bold hover:bg-[#20BA5A] transition-all"
+          >
+            <span className="material-symbols-outlined text-base">chat</span>
+            Contactar por WhatsApp
+          </a>
+        </div>
       </div>
     </div>
   );

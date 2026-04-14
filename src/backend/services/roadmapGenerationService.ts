@@ -36,12 +36,11 @@ export interface RoadmapGenerated {
 function generateFallbackRoadmap(mainChallenge: string, context: string, company: string, employeeCount: string): RoadmapGenerated {
   // Mapear desafíos a roadmaps específicos
   const challengeMap: Record<string, () => RoadmapGenerated> = {    'cost-overruns': () => ({
-      stages: [
-        {
+      stages: [        {
           number: 1,
           title: 'Auditoría de Costos Profunda',
           description: 'Análisis exhaustivo de flujos de gastos, identificación de desperdicio y fuentes de sobrecostos',
-          duration: '3 semanas',
+          duration: '~10 días',
           focus: 'Visibilidad total de costos',
           deliverables: ['Mapeo de gastos por área', 'Identificación de fugas presupuestarias', 'Análisis comparativo vs benchmarks'],
         },
@@ -49,7 +48,7 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
           number: 2,
           title: 'Automatización de Procesos Costosos',
           description: 'Implementación de IA y automatización en los procesos que generan mayor gasto operacional',
-          duration: '6 semanas',
+          duration: '~10 días',
           focus: 'Reducción automática de costos',
           deliverables: ['Sistema de automatización', 'Optimización de workflows', 'Métricas de ahorro'],
         },
@@ -57,7 +56,7 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
           number: 3,
           title: 'Validación y Ajustes',
           description: 'Pruebas en vivo de las soluciones de ahorro de costos con equipos piloto',
-          duration: '4 semanas',
+          duration: 'Variable',
           focus: 'Validación de ROI',
           deliverables: ['Piloto funcional', 'Reporte de ahorros', 'Documentación de procesos'],
         },
@@ -65,7 +64,7 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
           number: 4,
           title: 'Escalamiento y Monitoreo',
           description: 'Expansión de las soluciones a toda la organización con sistemas de monitoreo continuo',
-          duration: '6 semanas',
+          duration: 'Ongoing',
           focus: 'Sostenibilidad de ahorros',
           deliverables: ['Rollout completo', 'Dashboard de monitoreo', 'Plan de mejora continua'],
         },
@@ -86,12 +85,11 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
         successMetric: 'Ahorro mensual verificado y aumento de margen operativo',
       },
     }),    'bottlenecks': () => ({
-      stages: [
-        {
+      stages: [        {
           number: 1,
           title: 'Mapeo de Cuellos de Botella',
           description: 'Identificación de procesos lentos y dependencias críticas que limitan la velocidad',
-          duration: '2 semanas',
+          duration: '~10 días',
           focus: 'Diagnóstico de bloqueos operacionales',
           deliverables: ['Mapa de procesos críticos', 'Identificación de bottlenecks', 'Matriz de impacto'],
         },
@@ -99,7 +97,7 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
           number: 2,
           title: 'Rediseño y Paralelización',
           description: 'Rediseño de procesos para eliminar dependencias secuenciales usando IA y automatización',
-          duration: '5 semanas',
+          duration: '~10 días',
           focus: 'Optimización de flujos',
           deliverables: ['Procesos rediseñados', 'Sistema de paralelización', 'Documentación de nuevos flujos'],
         },
@@ -107,7 +105,7 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
           number: 3,
           title: 'Implementación Acelerada',
           description: 'Despliegue de nuevos procesos en equipos clave con monitoreo intensivo',
-          duration: '4 semanas',
+          duration: 'Variable',
           focus: 'Validación de velocidad',
           deliverables: ['Implementación piloto', 'Métricas de velocidad', 'Feedback del equipo'],
         },
@@ -115,7 +113,7 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
           number: 4,
           title: 'Optimización Continua',
           description: 'Mejora permanente de tiempos y eliminación de nuevos cuellos de botella emergentes',
-          duration: '8 semanas',
+          duration: 'Ongoing',
           focus: 'Velocidad sostenible',
           deliverables: ['Rollout completo', 'Sistema de alertas', 'Ciclo de mejora continua'],
         },
@@ -136,12 +134,11 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
         successMetric: 'Reducción de ciclo de proceso y aumento de capacidad operativa',
       },
     }),    'chaos': () => ({
-      stages: [
-        {
+      stages: [        {
           number: 1,
           title: 'Estandarización de Procesos',
           description: 'Documentación y estandarización de procesos caóticos para crear orden operacional',
-          duration: '4 semanas',
+          duration: '~10 días',
           focus: 'Crear estructura y gobernanza',
           deliverables: ['Documentación de procesos', 'Procedimientos estándar', 'Guías operacionales'],
         },
@@ -149,7 +146,7 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
           number: 2,
           title: 'Implementación de Sistemas',
           description: 'Despliegue de sistemas y herramientas para mantener los procesos estandarizados',
-          duration: '6 semanas',
+          duration: '~10 días',
           focus: 'Automatización de control',
           deliverables: ['Sistemas integrados', 'Automatización de validación', 'Dashboards de control'],
         },
@@ -157,7 +154,7 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
           number: 3,
           title: 'Capacitación y Adopción',
           description: 'Entrenamiento intensivo de equipos para asegurar adopción de nuevos procesos',
-          duration: '4 semanas',
+          duration: 'Variable',
           focus: 'Cambio organizacional',
           deliverables: ['Programas de capacitación', 'Certificación de equipos', 'Guías de buenas prácticas'],
         },
@@ -165,7 +162,7 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
           number: 4,
           title: 'Gobernanza y Mejora',
           description: 'Establecimiento de ciclos de mejora continua y gobernanza operacional',
-          duration: '6 semanas',
+          duration: 'Ongoing',
           focus: 'Sostenibilidad del orden',
           deliverables: ['Estructura de gobernanza', 'Métricas de cumplimiento', 'Plan de evolución'],
         },
@@ -186,12 +183,11 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
         successMetric: 'Adopción de procesos estándar y mejora en métrica de consistencia',
       },
     }),    'other': () => ({
-      stages: [
-        {
+      stages: [        {
           number: 1,
           title: 'Diagnóstico Profundo',
           description: 'Análisis detallado de procesos, sistemas y áreas de fricción operativa',
-          duration: '4 semanas',
+          duration: '~10 días',
           focus: 'Entender la situación actual',
           deliverables: ['Análisis de procesos', 'Mapeo de sistemas', 'Identificación de puntos de dolor'],
         },
@@ -199,7 +195,7 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
           number: 2,
           title: 'Diseño de Solución con IA',
           description: 'Diseño de la arquitectura personalizada aprovechando inteligencia artificial',
-          duration: '6 semanas',
+          duration: '~10 días',
           focus: 'Solución adaptada al contexto',
           deliverables: ['Arquitectura propuesta', 'Roadmap técnico', 'Plan de implementación'],
         },
@@ -207,7 +203,7 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
           number: 3,
           title: 'Implementación Piloto',
           description: 'Piloto controlado en un caso de uso prioritario para validar resultados',
-          duration: '8 semanas',
+          duration: 'Variable',
           focus: 'Validación en vivo',
           deliverables: ['Módulo piloto funcional', 'Documentación técnica', 'Capacitación inicial'],
         },
@@ -215,7 +211,7 @@ function generateFallbackRoadmap(mainChallenge: string, context: string, company
           number: 4,
           title: 'Escalamiento y Adopción',
           description: 'Expansión a toda la organización con soporte continuo',
-          duration: '12 semanas',
+          duration: 'Ongoing',
           focus: 'Adopción completa y sostenibilidad',
           deliverables: ['Integración total', 'Capacitación integral', 'Soporte operativo'],
         },
@@ -304,9 +300,9 @@ export async function generateRoadmapWithAI(
     } else if (companySize.includes('50+')) {
       timelineAdjustment = 8;
       scopeLevel = 'Enterprise (complejo)';
-    }    const prompt = `Eres un experto senior en transformación digital e implementación de IA en empresas. Tu rol es generar un roadmap estratégico PERSONALIZADO y COMPLETO basado en el contexto específico del cliente.
+    }    const prompt = `Eres un consultor senior de transformación digital que debe ANALIZAR y GENERAR un roadmap personalizado.
 
-INFORMACIÓN DEL CLIENTE:
+INFORMACIÓN DEL CLIENTE A ANALIZAR:
 ═══════════════════════════════════════════════════════════════
 📊 EMPRESA: ${company}
 👥 TAMAÑO: ${companySize} empleados (Scope: ${scopeLevel})
@@ -314,10 +310,13 @@ INFORMACIÓN DEL CLIENTE:
    → Traducción: ${challengeDescription}
 📝 CONTEXTO OPERATIVO DETALLADO: "${context}"
 
-INSTRUCCIONES CRÍTICAS - GENERA ABSOLUTAMENTE TODO:
-═══════════════════════════════════════════════════════════════
+INSTRUCCIONES - ANALIZA PROFUNDAMENTE:
+═════════════════════════════════════════════════════════════════
 
-Tu respuesta debe incluir TODOS estos elementos personalizados para ${company}:
+1. NO COPIES EL CONTEXTO: Analiza lo que el cliente dijo en "${context}"
+2. DEDUCE "affectedArea": De ${context}, identifica qué área operativa específica es afectada
+3. ANALIZA "currentConsequence": De ${context}, deduce el impacto real (no genérico)
+4. DEFINE "objective": Objetivo claro y realista para ${company}
 
 1. CONTEXTO DE NEGOCIO (basado en la información anterior):
    - mainChallenge: El desafío específico en lenguaje ejecutivo
@@ -408,61 +407,64 @@ IMPORTANTE:
 
 Genera el roadmap COMPLETO y PERSONALIZADO ahora:
 `;
-
-
     let roadmapData: RoadmapGenerated;
-    let usesFallback = false;
+    let usesFallback = false;    try {
+      console.log('🤖 Llamando a Google Gemini API con modelo gemini-3-flash-preview...');
 
-    try {
-      // 1. Configuramos la URL de Google con la API Key en la URL
-      const apiKey = process.env.GOOGLE_API_KEY; // ¡Asegúrate de tener esto en tu .env.local!
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+      const apiKey = process.env.GOOGLE_API_KEY;
+      if (!apiKey) {
+        throw new Error('Missing GOOGLE_API_KEY environment variable');
+      }
 
-      const response = await fetch(url, {
+      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=' + apiKey, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        // 2. Estructura de body específica para Gemini
         body: JSON.stringify({
           contents: [
             {
               parts: [
-                { text: prompt }
-              ]
-            }
+                {
+                  text: prompt,
+                },
+              ],
+            },
           ],
           generationConfig: {
             temperature: 0.7,
             maxOutputTokens: 8192,
-            // 👇 AGREGA ESTA LÍNEA MÁGICA 👇
-            responseMimeType: "application/json", 
-          }
+          },
         }),
       });
 
       if (!response.ok) {
-        const errorText = await response.text(); 
+        const errorText = await response.text();
         throw new Error(`Google Gemini API error: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();
-      
-      // 3. Ruta de acceso a la respuesta en Gemini
-      let responseText = data.candidates[0].content.parts[0].text;
+      const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (!responseText) {
+        throw new Error('No response from Groq API');
+      }
 
       console.log('📝 Respuesta de IA recibida, parseando JSON...');
 
-      // Limpiamos la respuesta en caso de que Gemini añada etiquetas markdown (```json ... ```)
-      responseText = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();      // Parsear el JSON de la respuesta
+      // Limpiamos la respuesta en caso de que Groq añada etiquetas markdown
+      let cleanedResponse = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+      // Parsear el JSON de la respuesta
       try {
-        roadmapData = JSON.parse(responseText);
+        roadmapData = JSON.parse(cleanedResponse);
       } catch (parseError) {
-        console.error('⚠️ Error al parsear JSON, usando datos fallback:', parseError);      usesFallback = true;
+        console.error('⚠️ Error al parsear JSON de Groq, usando fallback:', parseError);
+        usesFallback = true;
         roadmapData = generateFallbackRoadmap(mainChallenge, context, company, employeeCount);
       }
     } catch (apiError) {
-      console.warn('⚠️ Error conectando con Google Gemini, usando fallback:', apiError);
+      console.warn('⚠️ Error conectando con Groq API, usando fallback:', apiError);
       usesFallback = true;
       roadmapData = generateFallbackRoadmap(mainChallenge, context, company, employeeCount);
     }
